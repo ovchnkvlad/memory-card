@@ -1,0 +1,31 @@
+@import './header';
+@import './game-field';
+@import './card';
+@import '../variables';
+
+body{
+  background: $main-bg;
+}
+
+.app-wrapper {
+  margin: 0;
+  display: grid;
+  grid-template-areas:
+    "header"
+    "main"
+    "footer";
+  grid-template-rows: 1fr 80vh 1fr;
+  grid-gap: 5px;
+  height: 100vh;
+}
+
+main {
+  grid-area: main;
+  overflow: scroll;
+}
+
+.error-description {
+  color: indianred;
+  font-size: 12px;
+  font-weight: bold;
+}
