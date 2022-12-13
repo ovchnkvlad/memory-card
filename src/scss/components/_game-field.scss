@@ -6,3 +6,8 @@
   grid-gap: 10px;
   margin: 0 20%;
 }
+@media (max-width: 980px) {
+  .game-field{
+    margin: 0;
+  }
+}

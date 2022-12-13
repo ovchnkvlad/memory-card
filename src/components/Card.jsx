@@ -1,16 +1,20 @@
 import React from 'react';
-import cabage from '../assets/img/cabage.png'
 import star from '../assets/img/star.png'
+import classnames from "classnames";
 
-const Card = () => {
+const Card = ({card, index, isFlipped,isInactive, onClickHandler}) => {
+
     return (
-        <div className="flip-container card" onTouchStart="this.classList.toggle('hover');">
-            <div className="flipper">
+        <div className="flip-container card" onClick={() => onClickHandler(index)}>
+            <div className={classnames("flipper", {
+                "is-flipped": isFlipped,
+                "is-inactive": isInactive
+            })}>
                 <div className="front">
                     <img src={star} alt="Star"/>
                 </div>
                 <div className="back">
-                    <img src={cabage} alt=""/>
+                    <img src={card.image} alt="id"/>
                 </div>
             </div>
         </div>
