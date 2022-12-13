@@ -1,6 +1,7 @@
 import Card from "./Card";
 import {useEffect, useState} from "react";
 import Modal from "./Modal";
+import GameInfo from "./GameInfo";
 
 const GameField = ({gameItem}) => {
 
@@ -16,7 +17,9 @@ const GameField = ({gameItem}) => {
     const [showModal, setShowModal] = useState(false);
 
     // To calculate the number of moving
-    // const [moves, setMoves] = useState(0);
+    const [moves, setMoves] = useState(0);
+
+    const [bestScore, setBestScore] = useState(JSON.parse(localStorage.getItem("bestScore")) || Number.POSITIVE_INFINITY);
 
     const compareCard = () => {
         const [first, second] = openCards;
@@ -27,8 +30,12 @@ const GameField = ({gameItem}) => {
     }
     const checkGameFinish = () => {
         if (Object.keys(clearedCards).length === gameItem.length) {
-            console.log('Game Over')
             setShowModal(true);
+            const highScore = Math.min(moves, bestScore);
+            setBestScore(highScore);
+            debugger
+            localStorage.setItem("bestScore", highScore);
+
         }
     }
 
@@ -53,6 +60,7 @@ const GameField = ({gameItem}) => {
         } else {
             setOpenCards([index])
         }
+        setMoves(moves + 1);
     }
 
     const checkIsFlipped = (index) => {
@@ -61,18 +69,28 @@ const GameField = ({gameItem}) => {
     const checkIsInactive = (card) => {
         return Boolean(clearedCards[card.type]);
     }
-    return (
-        <main className="game-field">
-            {cards.map((item, idx) => <Card key={idx}
-                                            index={idx}
-                                            card={item}
-                                            isFlipped={checkIsFlipped(idx)}
-                                            isInactive={checkIsInactive(item)}
-                                            onClickHandler={onCardClickHandler}/>
-            )}
 
-            {showModal ? <Modal/> : ''}
-        </main>
+    const restartGame = () => {
+        setClearedCards({});
+        setOpenCards([]);
+        setShowModal(false);
+        setMoves(0);
+        setCards(gameItem.concat(gameItem).sort(() => Math.random() - 0.5));
+    }
+    return (
+        <>
+            <GameInfo movesCount={moves} bestScore={bestScore}/>
+            <main className="game-field">
+                {cards.map((item, idx) => <Card key={idx}
+                                                index={idx}
+                                                card={item}
+                                                isFlipped={checkIsFlipped(idx)}
+                                                isInactive={checkIsInactive(item)}
+                                                onClickHandler={onCardClickHandler}/>
+                )}
+                {showModal ? <Modal moveCount={moves} bestScore={bestScore} restartHandler={restartGame}/> : ''}
+            </main>
+        </>
     );
 };
 

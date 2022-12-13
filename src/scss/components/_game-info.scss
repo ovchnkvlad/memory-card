@@ -1,0 +1,12 @@
+.game-info{
+  display: flex;
+  justify-content: space-around;
+  text-transform: uppercase;
+  color: #fff;
+  p{
+    font-size: 18px;
+    span{
+      font-weight: bold;
+    }
+  }
+}

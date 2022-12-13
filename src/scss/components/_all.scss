@@ -1,5 +1,6 @@
 @import './header';
 @import './game-field';
+@import './game-info';
 @import './card';
 @import './modal';
 @import '../variables';
@@ -13,9 +14,10 @@ body{
   display: grid;
   grid-template-areas:
     "header"
+    "sub-header"
     "main"
     "footer";
-  grid-template-rows: 1fr 80vh 1fr;
+  grid-template-rows: 1fr 0.5fr 80vh 1fr;
   grid-gap: 5px;
   height: 100vh;
 }
@@ -23,6 +25,9 @@ body{
 main {
   grid-area: main;
   overflow: scroll;
+}
+.game-info{
+  grid-area: sub-header;
 }
 
 .error-description {
