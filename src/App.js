@@ -4,7 +4,7 @@ import GameField from "./components/GameField";
 
 function App() {
 
-    const gameItemArr = [
+    const uniqueGameElements = [
         {
             type: 'banana',
             image: './assets/img/banana.png'
@@ -42,7 +42,7 @@ function App() {
     return (
         <div className="app-wrapper">
             <Header/>
-            <GameField gameItem={gameItemArr}/>
+            <GameField uniqueGameElements={uniqueGameElements}/>
         </div>
     );
 }

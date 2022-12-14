@@ -7,6 +7,7 @@
   max-width: 680px;
   border: 2px solid #FEA832;
   padding: 0 20px;
+  align-items: center;
 
   .stopwatch-display{
     display: flex;
@@ -21,6 +22,19 @@
     margin-right: 30px;
     span{
       font-weight: bold;
+    }
+  }
+  button{
+    padding: 5px 20px;
+    border-radius: 5px;
+    border-color: transparent;
+    max-height: 40px;
+    margin-left: 20px;
+    background-color: #FEA832;
+    color: #fff;
+    &:hover{
+      background-color: #fa950c;
+      cursor: pointer;
     }
   }
 }
