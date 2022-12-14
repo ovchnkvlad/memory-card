@@ -5,8 +5,9 @@
 @import './modal';
 @import '../variables';
 
-body{
+body {
   background: $main-bg;
+  font-family: 'Arial', sans-serif;
 }
 
 .app-wrapper {
@@ -26,7 +27,8 @@ main {
   grid-area: main;
   overflow: scroll;
 }
-.game-info{
+
+.game-info {
   grid-area: sub-header;
 }
 

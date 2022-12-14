@@ -6,8 +6,13 @@
   grid-gap: 10px;
   margin: 0 20%;
 }
-@media (max-width: 980px) {
+@media (max-width: 1200px) {
   .game-field{
-    margin: 0;
+    margin: 0 10%;
+  }
+}
+@media (max-width: 760px) {
+  .game-field{
+    margin: 0 5%;
   }
 }

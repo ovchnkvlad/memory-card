@@ -1,5 +1,5 @@
 import Card from "./Card";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Modal from "./Modal";
 import GameInfo from "./GameInfo";
 
@@ -19,6 +19,9 @@ const GameField = ({gameItem}) => {
     // To calculate the number of moving
     const [moves, setMoves] = useState(0);
 
+    const [timerOn, setTimerOn] = React.useState(true);
+    const [time, setTime] = React.useState(0);
+
     const [bestScore, setBestScore] = useState(JSON.parse(localStorage.getItem("bestScore")) || Number.POSITIVE_INFINITY);
 
     const compareCard = () => {
@@ -33,9 +36,8 @@ const GameField = ({gameItem}) => {
             setShowModal(true);
             const highScore = Math.min(moves, bestScore);
             setBestScore(highScore);
-            debugger
+            setTimerOn(false);
             localStorage.setItem("bestScore", highScore);
-
         }
     }
 
@@ -53,6 +55,18 @@ const GameField = ({gameItem}) => {
         checkGameFinish();
     }, [clearedCards]);
 
+    React.useEffect(() => {
+        let interval = null;
+        if (timerOn) {
+            interval = setInterval(() => {
+                setTime((prevTime) => prevTime + 10);
+            }, 10);
+        } else if (!timerOn) {
+            clearInterval(interval);
+        }
+
+        return () => clearInterval(interval);
+    }, [timerOn]);
 
     const onCardClickHandler = (index) => {
         if (openCards.length === 1) {
@@ -75,11 +89,13 @@ const GameField = ({gameItem}) => {
         setOpenCards([]);
         setShowModal(false);
         setMoves(0);
+        setTimerOn(true);
+        setTime(0);
         setCards(gameItem.concat(gameItem).sort(() => Math.random() - 0.5));
     }
     return (
         <>
-            <GameInfo movesCount={moves} bestScore={bestScore}/>
+            <GameInfo movesCount={moves} bestScore={bestScore} time={time}/>
             <main className="game-field">
                 {cards.map((item, idx) => <Card key={idx}
                                                 index={idx}

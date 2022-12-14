@@ -1,13 +1,19 @@
 import React from 'react';
 
-
-const GameInfo = ({movesCount,bestScore}) => {
-
+const GameInfo = ({movesCount,bestScore,time}) => {
+    
     return (<section className='game-info'>
 
         <p>Best score: <span>{bestScore}</span> </p>
         <p>Moves: <span>{movesCount}</span> </p>
-        <p>Time: <span>00:00:00</span> </p>
+        <div className="stopwatch-display">
+            <p>Time:</p>
+            <span>{("0" + Math.floor((time / 60000) % 60)).slice(-2)}:</span>
+            <span>{("0" + Math.floor((time / 1000) % 60)).slice(-2)}:</span>
+            <span>{("0" + ((time / 10) % 100)).slice(-2)}</span>
+        </div>
+
+
     </section>);
 };
 
