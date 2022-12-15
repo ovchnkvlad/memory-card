@@ -4,12 +4,12 @@ import classnames from "classnames";
 
 const Card = ({card, index, isFlipped,isInactive, onClickHandler,isDisabled}) => {
 
-    const onClick = (idx) => {
-        return !isFlipped && !isDisabled && onClickHandler(idx);
+    const onClick = () => {
+        return !isFlipped && !isDisabled && onClickHandler(index);
     }
 
     return (
-        <div className="flip-container card" onClick={() => onClick(index)}>
+        <div className="flip-container card" onClick={() => onClick()}>
             <div className={classnames("flipper", {
                 "is-flipped": isFlipped,
                 "is-inactive": isInactive

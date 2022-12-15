@@ -2,30 +2,21 @@ import Card from "./Card";
 import React, {useEffect, useRef, useState} from "react";
 import Modal from "./Modal";
 import GameInfo from "./GameInfo";
-import getShuffleArr from "../utils/ShuffleArr";
+import ShuffleArr from "../utils/ShuffleArr";
 
-const GameField = ({uniqueGameElements}) => {
+const GameField = ({uniqueCard}) => {
 
-    const [cards, setCards] = useState(() => getShuffleArr(uniqueGameElements));
+    const INITIAL_STATE = ShuffleArr(Object.keys(uniqueCard));
 
-    // Check the OpenCards
+
+    const [cards, setCards] = useState(INITIAL_STATE);
     const [openCards, setOpenCards] = useState([]);
-
-    // Check the card which was matching
     const [clearedCards, setClearedCards] = useState({});
-
-    //Show game finish model
     const [showModal, setShowModal] = useState(false);
-
-    // To calculate the number of moving
     const [moves, setMoves] = useState(0);
-
-    //Stopwatch timer
     const [timerOn, setTimerOn] = React.useState(true);
     const [time, setTime] = React.useState(0);
-
     const [shouldDisableAllCards, setShouldDisableAllCards] = useState(false);
-
     const [bestScore, setBestScore] = useState(JSON.parse(localStorage.getItem("bestScore")) || Number.POSITIVE_INFINITY);
 
     const timeout = useRef(null);
@@ -44,7 +35,7 @@ const GameField = ({uniqueGameElements}) => {
         checkGameFinish();
     }, [clearedCards]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         let interval = null;
         if (timerOn) {
             interval = setInterval(() => {
@@ -60,6 +51,7 @@ const GameField = ({uniqueGameElements}) => {
     const disableCard = () => {
         setShouldDisableAllCards(true);
     }
+
     const enableCard = () => {
         setShouldDisableAllCards(false);
     }
@@ -67,19 +59,20 @@ const GameField = ({uniqueGameElements}) => {
     const compareCard = () => {
         const [first, second] = openCards;
         enableCard();
-        if (cards[first].type === cards[second].type) {
-            setClearedCards((prev) => ({...prev, [cards[first].type]: true}));
+        if (cards[first] === cards[second]) {
+            setClearedCards((prev) => ({...prev, [cards[first]]: true}));
             setOpenCards([]);
         }
-
         timeout.current = setTimeout(() => {
             setOpenCards([]);
         }, 500);
     }
+
     const checkGameFinish = () => {
-        if (Object.keys(clearedCards).length === uniqueGameElements.length) {
+
+        if (Object.keys(clearedCards).length === Object.keys(uniqueCard).length) {
             setShowModal(true);
-            const highScore = Math.min(moves, bestScore);
+            const highScore = Math.min(moves, +bestScore);
             setBestScore(highScore);
             setTimerOn(false);
             localStorage.setItem("bestScore", highScore);
@@ -89,18 +82,19 @@ const GameField = ({uniqueGameElements}) => {
     const onCardClickHandler = (index) => {
         if (openCards.length === 1) {
             setOpenCards((prev) => [...prev, index])
+            setMoves(moves + 1);
+            disableCard();
         } else {
             clearTimeout(timeout.current);
             setOpenCards([index])
         }
-        setMoves(moves + 1);
     }
 
     const checkIsFlipped = (index) => {
         return openCards.includes(index);
     };
-    const checkIsInactive = (card) => {
-        return Boolean(clearedCards[card.type]);
+    const checkIsInactive = (index) => {
+        return Boolean(clearedCards[index]);
     }
 
     const restartGame = () => {
@@ -111,21 +105,21 @@ const GameField = ({uniqueGameElements}) => {
         setTimerOn(true);
         enableCard();
         setTime(0);
-        setCards(getShuffleArr(uniqueGameElements));
+        setCards(INITIAL_STATE);
     }
     return (
         <>
             <GameInfo movesCount={moves} bestScore={bestScore} time={time} restartHandler={restartGame}/>
             <main className="game-field">
-                {cards.map((item, idx) => <Card key={idx}
-                                                index={idx}
-                                                card={item}
-                                                isFlipped={checkIsFlipped(idx)}
+                {cards.map((item, index) => <Card key={index}
+                                                index={index}
+                                                card={uniqueCard[item]}
+                                                isFlipped={checkIsFlipped(index)}
                                                 isInactive={checkIsInactive(item)}
                                                 isDisabled={shouldDisableAllCards}
                                                 onClickHandler={onCardClickHandler}/>
                 )}
-                {showModal ? <Modal moveCount={moves} bestScore={bestScore} restartHandler={restartGame}/> : ''}
+                {showModal ? <Modal moveCount={moves} bestScore={bestScore} restartHandler={restartGame} time={time}/> : ''}
             </main>
         </>
     );
